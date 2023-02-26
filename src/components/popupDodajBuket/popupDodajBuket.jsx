@@ -35,33 +35,37 @@ export default function PopUpDodajBuket({ pb, cvijece }) {
     };
     async function dodajBuket(data) {
         try {
+            const nizCvjetova = []
             if (cvjetovi.length > 0) {
+                for (let i = 0; i < cvjetovi.length; i++) {
+                    const data1 = {
+                        "id_cvijeta": cvjetovi[i].id,
+                        "kolicina": cvjetovi[i].kol
+                    }
 
+                    const record1 = await pb.collection('sadrzajBuketa').create(data1, { '$autoCancel': false });
+                    nizCvjetova.push(record1.id.toString())
+
+                    const dataCvijet = {
+
+                        "kolicina": cvjetovi[i].maxKolicina - cvjetovi[i].kol
+                    };
+                    const recordSmanjiKolicinuCvjeta = await pb.collection('cvjet').update(cvjetovi[i].id, dataCvijet);
+                }
                 const formData = new FormData();
                 formData.append("naziv", data.naziv);
                 formData.append("kolicina", data.kolicina,);
                 formData.append("cijena", data.cijena);
                 formData.append("opis", data.opis);
                 formData.append("slika", filesToUpload);
-                const record = await pb.collection('buket').create(formData);
-                cvjetovi.forEach(myFunction);
-
-                async function myFunction(cvjet) {
-                    const data1 = {
-                        "id_buketa": record.id,
-                        "id_cvijeta": cvjet.id,
-                        "kolicina": cvjet.kol
-                    };
-
-                    const record1 = await pb.collection('sadrzajBuketa').create(data1);
-                    const dataCvijet = {
-
-                        "kolicina": cvjet.maxKolicina - cvjet.kol
-                    };
-                    const recordSmanjiKolicinuCvjeta = await pb.collection('cvjet').update(cvjet.id, dataCvijet);
+                for (const cvjet of nizCvjetova) {
+                    formData.append("sadrzajBuketa_id", cvjet)
                 }
 
+                const record = await pb.collection('buket').create(formData);
+
                 cvjetovi.splice(0, cvjetovi.length)
+                nizCvjetova.splice(0, nizCvjetova.length);
                 reset();
                 handleClose();
             } else window.alert('Morate izabrati bar jedan cvjet')

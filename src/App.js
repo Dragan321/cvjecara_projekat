@@ -48,11 +48,12 @@ function App() {
   async function ucitajBukete() {
     try {
       const resultList = await pb.collection('buket').getList(1, 50, {
-        expand: 'sadrzajBuketa(id_buketa),  sadrzajBuketa(id_buketa).id_cvijeta ',
+        expand: 'sadrzajBuketa_id.id_cvijeta',
         '$autoCancel': false
       });
 
       setBuketi(resultList.items)
+
     } catch (error) {
       console.log(error)
     }

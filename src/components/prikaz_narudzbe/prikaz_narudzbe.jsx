@@ -114,13 +114,14 @@ export default function Prikaz_narudzbe({ data, role, ucitajNarudzbe }) {
     const rows = [];
 
     data.forEach(kreirajRed)
+    console.log(data)
 
     function kreirajRed(red, index) {
         var arraypom = []
-        red.expand['sadrzajNarudzbe(narudzbe_id)'].forEach(izlistajSadrzajNarudzbe)
+        red.expand.sadrzajNarudzbe_id.forEach(izlistajSadrzajNarudzbe)
 
         function izlistajSadrzajNarudzbe(red) {
-            if (red.expand.cvijet_id != null)
+            if (red.cvijet_id != '') {
                 arraypom.push(
                     {
                         cvijet: red.expand.cvijet_id.naziv,
@@ -128,28 +129,32 @@ export default function Prikaz_narudzbe({ data, role, ucitajNarudzbe }) {
                         cjena: red.cijena,
                     }
                 )
-            else if (red.expand.buket_id != null) {
+            }
+            else if (red.buket_id != '') {
                 var sadrzajBuketa = ''
 
 
-                red.expand.buket_id.expand['sadrzajBuketa(id_buketa)'].forEach(myFunction)
+                red.expand['buket_id'].expand['sadrzajBuketa_id'].forEach(myFunction)
 
                 function myFunction(item, index, arr) {
-                    sadrzajBuketa += ' ' + item.expand['id_cvijeta'].naziv + ' x' + item.kolicina + ' '
+                    sadrzajBuketa += ' ' + item.expand['id_cvijeta'].naziv + ' x' + item.kolicina + ''
+                    if (arr.length > index + 1)
+                        sadrzajBuketa += ', '
                 }
                 arraypom.push(
                     {
-                        cvijet: red.expand.buket_id.naziv + '( ' + sadrzajBuketa + ' )',
+                        cvijet: red.expand.buket_id.naziv + ' ( ' + sadrzajBuketa + ' )',
                         kolicina: red.kolicina_cvjeta,
                         cjena: red.cijena,
                     }
                 )
+
             }
         }
         var imePrezime = ''
         if (role == 'ADMIN')
             imePrezime = red.expand['user_id'].name + ' ' + red.expand.user_id.last_name
-        rows.push(createData(red.created, red.oreder_status, red.ukupnaCjena, arraypom, index + 1, imePrezime))
+        rows.push(createData(red.created, red.order_status, red.ukupnaCjena, arraypom, index + 1, imePrezime))
     }
     const [orderDirection, setOrderDirection] = useState('asc')
     const [orderByValue, setOrderByValue] = useState('Status')

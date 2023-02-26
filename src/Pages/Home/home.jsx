@@ -71,7 +71,7 @@ export default function Home(props) {
 
             {props.buketi.length > 0 ? (props.buketi.map((buket) =>
               <Grid2 item md={3} xs={12} sm={6} key={buket.id}>
-                <CardBuket setCartUkupnaCjena={props.setCartUkupnaCjena} cartUkupnaCjena={props.cartUkupnaCjena} setCartItemsCount={props.setCartItemsCount} cartItemsCount={props.cartItemsCount} buket={buket} cartItemsBuketi={props.cartItemsBuketi} setCartItemsBuketi={props.setCartItemsBuketi} img={props.pb.getFileUrl(buket, buket.slika)} naziv={buket.naziv} sadrzaj={buket.expand['sadrzajBuketa(id_buketa)']} maxKolicina={buket.kolicina} cijena={buket.cijena} />
+                <CardBuket setCartUkupnaCjena={props.setCartUkupnaCjena} cartUkupnaCjena={props.cartUkupnaCjena} setCartItemsCount={props.setCartItemsCount} cartItemsCount={props.cartItemsCount} buket={buket} cartItemsBuketi={props.cartItemsBuketi} setCartItemsBuketi={props.setCartItemsBuketi} img={props.pb.getFileUrl(buket, buket.slika)} naziv={buket.naziv} sadrzaj={buket.expand['sadrzajBuketa_id']} maxKolicina={buket.kolicina} cijena={buket.cijena} />
               </Grid2>
             )) : (<div></div>)}
           </Grid2>
