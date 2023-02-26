@@ -7,12 +7,9 @@ export default function Dashboard({ pb, isLoggedIn }) {
     async function ucitajNarudzbe(sort, order, searchTerm) {
         try {
             var sortIzraz = '';
-            var searchIzraz = '';
-            if (searchTerm != null && searchTerm != '') {
-                pb.authStore.model.role == 'ADMIN' ? searchIzraz = ` user_id.name~"${searchTerm}" || user_id.last_name~"${searchTerm}" || order_status~"${searchTerm}" || created~"${searchTerm}" || sadrzajNarudzbe_id.cvijet_id.naziv ? ~"${searchTerm}" || sadrzajNarudzbe_id.buket_id.naziv ? ~"${searchTerm}" || sadrzajNarudzbe_id.buket_id.sadrzajBuketa_id.id_cvijeta.naziv ? ~"${searchTerm}" ` :
-                    searchIzraz = `user_id = "${pb.authStore.model.id}" || order_status~"${searchTerm}" || created~"${searchTerm}" || sadrzajNarudzbe_id.cvijet_id.naziv ? ~"${searchTerm}" || sadrzajNarudzbe_id.buket_id.naziv ? ~"${searchTerm}" || sadrzajNarudzbe_id.buket_id.sadrzajBuketa_id.id_cvijeta.naziv ? ~"${searchTerm}" `
+            if (searchTerm == null) {
+                searchTerm = '';
             }
-
             switch (sort) {
                 case 'Vrjeme':
                     if (order == 'desc')
@@ -46,13 +43,13 @@ export default function Dashboard({ pb, isLoggedIn }) {
 
             const resultList = pb.authStore.model.role == 'ADMIN' ? await pb.collection('narudzbe').getList(1, 50, {
                 sort: sortIzraz,
-                filter: `${searchIzraz}`,
+                filter: `user_id.name~"${searchTerm}" || user_id.last_name~"${searchTerm}" || order_status~"${searchTerm}" || created~"${searchTerm}" || sadrzajNarudzbe_id.cvijet_id.naziv?~"${searchTerm}" || sadrzajNarudzbe_id.buket_id.naziv?~"${searchTerm}" || sadrzajNarudzbe_id.buket_id.sadrzajBuketa_id.id_cvijeta.naziv?~"${searchTerm}"  `,
                 expand: 'user_id,sadrzajNarudzbe_id.cvijet_id, sadrzajNarudzbe_id.buket_id.sadrzajBuketa_id.id_cvijeta',
                 '$autoCancel': false
             }) :
                 await pb.collection('narudzbe').getList(1, 50, {
                     sort: sortIzraz,
-                    filter: `${searchIzraz}`,
+                    filter: `user_id="${pb.authStore.model.id}" &&(order_status~"${searchTerm}" || created~"${searchTerm}" || sadrzajNarudzbe_id.cvijet_id.naziv?~"${searchTerm}" || sadrzajNarudzbe_id.buket_id.naziv?~"${searchTerm}" || sadrzajNarudzbe_id.buket_id.sadrzajBuketa_id.id_cvijeta.naziv?~"${searchTerm}")`,
                     expand: 'sadrzajNarudzbe_id, sadrzajNarudzbe_id.cvijet_id, sadrzajNarudzbe_id.buket_id,sadrzajNarudzbe_id.buket_id.id_cvijeta',
                     '$autoCancel': false
                 });
