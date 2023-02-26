@@ -114,7 +114,6 @@ export default function Prikaz_narudzbe({ data, role, ucitajNarudzbe }) {
     const rows = [];
 
     data.forEach(kreirajRed)
-    console.log(data)
 
     function kreirajRed(red, index) {
         var arraypom = []
