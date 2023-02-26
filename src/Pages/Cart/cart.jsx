@@ -9,24 +9,19 @@ import CardCartBuket from '../../components/cardCart/cardCartBuket';
 export default function Cart({ ucitajBukete, cartItems, setCartItems, pb, setCartItemsCount, cartItemsCount, setCartUkupnaCjena, cartUkupnaCjena, isLoggedIn, ucitajCvjetove, cartItemsBuketi, setCartItemsBuketi }) {
     const [kartPrazan, setKartPrazan] = useState(true)
     async function izvrsiNarudzbu() {
-        //treba dodati live update kombinacija sa clear cart i use effect
+        const sadrzajNarudzbe = []
         try {
-            const data = {
-                "user_id": pb.authStore.model.id,
-                "oreder_status": "cekanje na preuzimanje",
-                "ukupnaCjena": cartUkupnaCjena
-            };
 
-            const record = await pb.collection('narudzbe').create(data);
             for (let i = 0; i < cartItems.length; i++) {
                 const data = {
-                    "narudzbe_id": record.id,
                     "cvijet_id": cartItems[i].cvijet.id,
                     "kolicina_cvjeta": cartItems[i].kolicina,
                     "cijena": cartItems[i].kolicina * cartItems[i].cvijet.cijena
                 };
 
-                const record1 = await pb.collection('sadrzajNarudzbe').create(data);
+
+                const cvjet = await pb.collection('sadrzajNarudzbe').create(data);
+                sadrzajNarudzbe.push(cvjet.id)
                 const dataCvijet = {
 
                     "kolicina": cartItems[i].cvijet.kolicina
@@ -37,20 +32,32 @@ export default function Cart({ ucitajBukete, cartItems, setCartItems, pb, setCar
 
             for (let i = 0; i < cartItemsBuketi.length; i++) {
                 const data = {
-                    "narudzbe_id": record.id,
                     "buket_id": cartItemsBuketi[i].buket.id,
                     "kolicina_cvjeta": cartItemsBuketi[i].kolicina,
                     "cijena": cartItemsBuketi[i].kolicina * cartItemsBuketi[i].buket.cijena
                 };
 
-                const record1 = await pb.collection('sadrzajNarudzbe').create(data);
+                const buket = await pb.collection('sadrzajNarudzbe').create(data);
+                sadrzajNarudzbe.push(buket.id)
+
                 const dataCvijet = {
 
                     "kolicina": cartItemsBuketi[i].buket.kolicina
                 };
 
-                const recordSmanjiKolicinuCvjeta = await pb.collection('buket').update(cartItemsBuketi[i].buket.id, dataCvijet);
+                const recordSmanjiKolicinuBuketa = await pb.collection('buket').update(cartItemsBuketi[i].buket.id, dataCvijet);
+
+
             }
+            const dataNarudzba = {
+                "user_id": pb.authStore.model.id,
+                "order_status": "cekanje na preuzimanje",
+                "ukupnaCjena": cartUkupnaCjena,
+                "sadrzajNarudzbe_id": sadrzajNarudzbe
+            };
+
+            const record = await pb.collection('narudzbe').create(dataNarudzba);
+            sadrzajNarudzbe.splice(0, sadrzajNarudzbe.length)
 
         }
         catch (error) {
