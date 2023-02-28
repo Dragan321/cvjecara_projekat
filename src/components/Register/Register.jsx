@@ -18,9 +18,12 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { getRoles } from '@testing-library/react';
 import { useForm } from 'react-hook-form';
+import { Record } from 'pocketbase';
 
 export default function RegisterPoUp(props) {
     const [value, setValue] = React.useState(dayjs('2014-08-18T21:11:54'));
+    const [uniqueEmail, setUniqueEmail] = useState(true);
+
 
     const handleChange = (newValue) => {
         setValue(newValue);
@@ -44,12 +47,27 @@ export default function RegisterPoUp(props) {
             "role": data.tipKorReg,
             "last_name": data.prezimeReg,
             "title": data.titulaReg,
-            "datum_rodjenja": data.datumRodjenjaReg.toString()
+            "datum_rodjenja": new Date(data.datumRodjenjaReg).toUTCString()
         };
         try {
             const record = await props.pb.collection('users').create(data1);
+            const record1 = await props.pb.collection('users').getList(1, 50, {
+                filter: 'role = "ADMIN"'
+            });
+            console.log(record1)
+            console.log(record)
+            if (record1.totalItems == 0) {
+                const data = {
+                    "verified_admin": true
+                };
 
-            window.alert('Uspjesna registracija');
+                const record2 = await props.pb.collection('users').update(record.id, data);
+            }
+
+            if (record.role == 'ADMIN')
+                window.alert('Uspjesna registracija!!!Morate sacekati na potvrdu od administratora da bi ste se mogli ulogovati');
+            else
+                window.alert('Uspjesna registracija');
             props.setopenRegisterPopUp(false);
             setErr('')
             reset();
@@ -59,6 +77,24 @@ export default function RegisterPoUp(props) {
             console.log(error.data);
         }
     }
+
+    async function jedinstvenEmail(event) {
+        try {
+            const resultList = await props.pb.collection('users').getList(1, 50, {
+                filter: `email="${event.target.value}"`,
+            });
+            console.log(resultList)
+            if (resultList.totalItems > 0) {
+                setUniqueEmail(false)
+            }
+            else if (!uniqueEmail) {
+                setUniqueEmail(true)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
 
     return (
         <Dialog open={props.openRegisterPopUp} onClose={() => { props.setopenRegisterPopUp(false); }} >
@@ -101,10 +137,13 @@ export default function RegisterPoUp(props) {
                         autoFocus
                         margin="dense"
                         {...register("emailReg")}
+                        error={!uniqueEmail}
+                        helperText={uniqueEmail ? ('') : ("Email je vec u upotrebi")}
                         label="Email"
                         type="email"
                         fullWidth
                         variant="standard"
+                        onChange={jedinstvenEmail}
                     />
                     <TextField
                         required

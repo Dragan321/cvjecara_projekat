@@ -80,6 +80,10 @@ function App() {
         username,
         password
       ).then(function () {
+        if (pb.authStore.model.role == "ADMIN" && pb.authStore.model.verified_admin == false) {
+          pb.authStore.clear();
+          window.alert('Molim vas sacekajte da budete verifikovani da bi ste se mogli ulogovati!!!')
+        }
         if (pb.authStore.isValid) {
           setlsLoggedin(true);
           setUserName(pb.authStore.model.name + ' ' + pb.authStore.model.last_name);

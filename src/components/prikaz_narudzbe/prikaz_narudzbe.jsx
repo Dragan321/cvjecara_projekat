@@ -16,11 +16,11 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Container } from '@mui/system';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import SearchBar from "@mkyy/mui-search-bar";
-import { Divider } from '@mui/material';
+import { Button, Divider } from '@mui/material';
 
 
-export default function Prikaz_narudzbe({ data, role, ucitajNarudzbe }) {
-    function createData(vrjemeNarudzbe, status, ukupno, sadrzaj, redniBroj, imePrezime) {
+export default function Prikaz_narudzbe({ pb, data, role, ucitajNarudzbe }) {
+    function createData(vrjemeNarudzbe, status, ukupno, sadrzaj, redniBroj, imePrezime, boja, id_reda) {
         return {
             redniBroj,
             status,
@@ -28,16 +28,34 @@ export default function Prikaz_narudzbe({ data, role, ucitajNarudzbe }) {
             vrjemeNarudzbe,
             sadrzaj,
             imePrezime,
+            boja,
+            id_reda
         };
     }
 
     function Row(props) {
         const { row } = props;
         const [open, setOpen] = useState(false);
+        const [back, setBack] = useState(props.backColor)
+        const id_reda = props.id_reda
+        async function potvrdiNarudzbu() {
+            const data = {
+                "order_status": "preuzeta",
+            };
+            try {
+                const record = await pb.collection('narudzbe').update(id_reda, data);
+                setBack('green')
+                row.status = 'preuzeta'
+            }
+            catch (err) {
+                console.log(err)
+                window.alert("Greska pri potvrdi narudzbe");
+            }
+        }
 
         return (
             <Fragment>
-                <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+                <TableRow sx={{ '& > *': { borderBottom: 'unset', backgroundColor: back } }}>
                     <TableCell>
                         <IconButton
                             aria-label="expand row"
@@ -53,7 +71,11 @@ export default function Prikaz_narudzbe({ data, role, ucitajNarudzbe }) {
                     {role == 'ADMIN' ? (<TableCell component="th" scope="row">
                         {row.imePrezime}
                     </TableCell>) : (<></>)}
-                    <TableCell align="right">{row.status}</TableCell>
+                    <TableCell align="right">{
+                        role == 'ADMIN' ?
+                            (back == 'white' ? <Typography>cekanje na preuzimanje<Button onClick={potvrdiNarudzbu}>Potvrdi narudzbu</Button></Typography> : row.status) :
+                            row.status
+                    }</TableCell>
                     <TableCell align="right">{row.ukupno}</TableCell>
                     <TableCell align="right">{row.vrjemeNarudzbe}</TableCell>
 
@@ -107,11 +129,22 @@ export default function Prikaz_narudzbe({ data, role, ucitajNarudzbe }) {
 
             ).isRequired,
             imePrezime: PropTypes.string.isRequired,
+            boja: PropTypes.string.isRequired,
+            id_reda: PropTypes.string.isRequired
 
         }).isRequired,
     };
 
     const rows = [];
+
+    async function updateStatusNarudzbe(id_reda) {
+        const data = {
+            "order_status": "istekla",
+        };
+
+        const record = await pb.collection('narudzbe').update(id_reda, data);
+
+    }
 
     data.forEach(kreirajRed)
 
@@ -151,9 +184,19 @@ export default function Prikaz_narudzbe({ data, role, ucitajNarudzbe }) {
             }
         }
         var imePrezime = ''
+        var boja = 'green'
         if (role == 'ADMIN')
             imePrezime = red.expand['user_id'].name + ' ' + red.expand.user_id.last_name
-        rows.push(createData(red.created, red.order_status, red.ukupnaCjena, arraypom, index + 1, imePrezime))
+        if (red.order_status == "cekanje na preuzimanje") {
+            let hours = Math.abs(new Date() - new Date(red.created)) / 36e5
+            if (hours > 24) {
+                red.order_status = 'istekla'
+                updateStatusNarudzbe(red.id);
+            }
+            boja = 'white'
+        }
+        else if (red.order_status == "istekla") boja = 'red'
+        rows.push(createData(new Date(red.created).toLocaleString("en-GB"), red.order_status, red.ukupnaCjena, arraypom, index + 1, imePrezime, boja, red.id))
     }
     const [orderDirection, setOrderDirection] = useState('asc')
     const [orderByValue, setOrderByValue] = useState('Status')
@@ -169,49 +212,45 @@ export default function Prikaz_narudzbe({ data, role, ucitajNarudzbe }) {
 
     }
     return (
-        <Container sx={{ marginTop: '50px' }}>
-            <TableContainer component={Paper}>
-                <SearchBar style={{ margin: '15px', border: 'solid 3px #D3D3D3' }} placeholder='Unesite pojam za pretragu'
-                    onChange={newValue => ucitajNarudzbe(orderByValue, orderDirection, newValue)} ></SearchBar>
-                <Divider />
-                <Table aria-label="collapsible table">
-                    <TableHead sx={{ backgroundColor: '#D3D3D3' }}>
+        <TableContainer component={Paper}>
+            <SearchBar style={{ margin: '15px', border: 'solid 3px #D3D3D3' }} placeholder='Unesite pojam za pretragu'
+                onChange={newValue => ucitajNarudzbe(orderByValue, orderDirection, newValue)} ></SearchBar>
+            <Divider />
+            <Table aria-label="collapsible table">
+                <TableHead sx={{ backgroundColor: '#D3D3D3' }}>
 
-                        <TableRow>
-                            <TableCell />
-                            <TableCell>Redni broj</TableCell>
-                            {role == 'ADMIN' ? (<TableCell>
-                                <TableSortLabel active={orderByValue == 'name'} direction={orderByValue === 'name' ? orderDirection : 'asc'}
-                                    onClick={() => { HandleSortRequest('name') }}
+                    <TableRow>
+                        <TableCell />
+                        <TableCell>Redni broj</TableCell>
+                        {role == 'ADMIN' ? (<TableCell>
+                            <TableSortLabel active={orderByValue == 'name'} direction={orderByValue === 'name' ? orderDirection : 'asc'}
+                                onClick={() => { HandleSortRequest('name') }}
 
-                                > Ime i prezime</TableSortLabel></TableCell>) : (<></>)}
-                            <TableCell align="right">
-                                <TableSortLabel active={orderByValue == 'Status'} direction={orderByValue === 'Status' ? orderDirection : 'asc'}
-                                    onClick={() => { HandleSortRequest('Status') }}> Status
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell align="right">
-                                <TableSortLabel active={orderByValue == 'cjena'} direction={orderByValue === 'cjena' ? orderDirection : 'asc'}
-                                    onClick={() => { HandleSortRequest('cjena') }}> Ukupna cjena (KM)
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell align="right">
-                                <TableSortLabel active={orderByValue == 'Vrjeme'} direction={orderByValue === 'Vrjeme' ? orderDirection : 'asc'}
-                                    onClick={() => { HandleSortRequest('Vrjeme') }}> Vrjeme narudzbe
-                                </TableSortLabel>
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {rows.map((row) => (
-                            <Row key={row.redniBroj} row={row} />
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-
-        </Container>
-
+                            > Ime i prezime</TableSortLabel></TableCell>) : (<></>)}
+                        <TableCell align="right">
+                            <TableSortLabel active={orderByValue == 'Status'} direction={orderByValue === 'Status' ? orderDirection : 'asc'}
+                                onClick={() => { HandleSortRequest('Status') }}> Status narudzbe
+                            </TableSortLabel>
+                        </TableCell>
+                        <TableCell align="right">
+                            <TableSortLabel active={orderByValue == 'cjena'} direction={orderByValue === 'cjena' ? orderDirection : 'asc'}
+                                onClick={() => { HandleSortRequest('cjena') }}> Ukupna cjena (KM)
+                            </TableSortLabel>
+                        </TableCell>
+                        <TableCell align="right">
+                            <TableSortLabel active={orderByValue == 'Vrjeme'} direction={orderByValue === 'Vrjeme' ? orderDirection : 'asc'}
+                                onClick={() => { HandleSortRequest('Vrjeme') }}> Vrjeme narudzbe
+                            </TableSortLabel>
+                        </TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {rows.map((row) => (
+                        < Row key={row.redniBroj} row={row} backColor={row.boja} id_reda={row.id_reda} />
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
     )
 
 }

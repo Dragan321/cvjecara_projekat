@@ -51,15 +51,23 @@ export default function Header(props) {
                                 </Button>
                                 {props.isLoggedIn ? (
                                     <Menu {...bindMenu(popupState)}>
-                                        <MenuItem onClick={popupState.close} id='profile' >
-                                            <Link to='/dashboard' style={{ textDecoration: 'none' }} ><Typography sx={{ color: 'black' }}>Prikaz narudzbi</Typography></Link>
-                                        </MenuItem>
-                                        <MenuItem onClick={popupState.close} id='logout'><Box onClick={props.logout}>Logout</Box></MenuItem>
+                                        <Link to='/dashboard' style={{ textDecoration: 'none' }} >
+                                            <MenuItem onClick={popupState.close} id='profile' >
+                                                <Typography sx={{ color: 'black' }}>Prikaz narudzbi</Typography>
+                                            </MenuItem>
+                                        </Link>
+                                        <Link to='/' style={{ textDecoration: 'none' }} >
+                                            <MenuItem onClick={() => { popupState.close(); props.logout(); }} id='logout'><Typography sx={{ color: 'black' }}>Logout</Typography></MenuItem>
+                                        </Link>
                                     </Menu>
                                 ) : (
                                     <Menu {...bindMenu(popupState)}>
-                                        <MenuItem onClick={popupState.close} id='Register'><Box onClick={() => { props.setopenRegisterPopUp(true) }}>Register</Box></MenuItem>
-                                        <MenuItem onClick={popupState.close} id='Login' ><Box onClick={() => { props.setopenLoginPopUp(true) }}>Login</Box></MenuItem>
+                                        <Link to='/' style={{ textDecoration: 'none' }} >
+                                            <MenuItem onClick={() => { props.setopenRegisterPopUp(true); popupState.close(); }} id='Register'><Typography sx={{ color: 'black' }}>Register</Typography></MenuItem>
+                                        </Link>
+                                        <Link to='/' style={{ textDecoration: 'none' }} >
+                                            <MenuItem onClick={() => { props.setopenLoginPopUp(true); popupState.close() }} id='Login' ><Typography sx={{ color: 'black' }} >Login</Typography></MenuItem>
+                                        </Link>
 
                                     </Menu>
 

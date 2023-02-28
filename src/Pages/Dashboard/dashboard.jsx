@@ -1,6 +1,15 @@
 import { Box } from "@mui/system";
 import { useState, useEffect } from "react";
 import Prikaz_narudzbe from "../../components/prikaz_narudzbe/prikaz_narudzbe";
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabPanel from '@mui/lab/TabPanel';
+import TabList from '@mui/lab/TabList';
+import ZahtejviZaAdmina from "../../components/zahtjeviZaAdmina/zahtjeviZaAdmina";
+import { Container } from "@mui/material";
+
+
+
 export default function Dashboard({ pb, isLoggedIn }) {
     const [narudzbe, setNarudzbe] = useState([])
 
@@ -63,19 +72,39 @@ export default function Dashboard({ pb, isLoggedIn }) {
         ucitajNarudzbe();
     }, []);
 
+    const [value, setValue] = useState('1');
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
 
 
     return (
 
-        <Box>
+        <Container>
+            <TabContext value={value}>
+                <Box>
+                    <TabList onChange={handleChange} centered>
+                        <Tab label="Pregled narudzbi" value="1" sx={{ fontSize: '30px' }} />
+                        <Tab label="Zahtjevi za admina" value="2" sx={{ fontSize: '30px' }} />
+                    </TabList>
+                </Box>
+                <TabPanel value="1">
+                    {isLoggedIn ?
+                        (<Box>
+                            <Prikaz_narudzbe pb={pb} data={narudzbe} role={pb.authStore.model.role} ucitajNarudzbe={ucitajNarudzbe} />
+                        </Box>) :
+                        (<></>)}
+                </TabPanel>
+                <TabPanel value="2">
+                    <ZahtejviZaAdmina pb={pb} />
 
-            {isLoggedIn ?
-                (<Box>
-                    <Prikaz_narudzbe data={narudzbe} role={pb.authStore.model.role} ucitajNarudzbe={ucitajNarudzbe} />
-                </Box>) :
-                (<></>)}
+                </TabPanel>
+            </TabContext>
 
-        </Box >
+
+
+        </Container >
     );
 
 }
