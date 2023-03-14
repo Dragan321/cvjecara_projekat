@@ -20,7 +20,7 @@ import { Button, Divider } from '@mui/material';
 
 
 export default function Prikaz_narudzbe({ pb, data, role, ucitajNarudzbe }) {
-    function createData(vrjemeNarudzbe, status, ukupno, sadrzaj, redniBroj, imePrezime, boja, id_reda) {
+    function createData(vrjemeNarudzbe, status, ukupno, sadrzaj, redniBroj, imePrezime, boja, id_reda, email) {
         return {
             redniBroj,
             status,
@@ -29,7 +29,9 @@ export default function Prikaz_narudzbe({ pb, data, role, ucitajNarudzbe }) {
             sadrzaj,
             imePrezime,
             boja,
-            id_reda
+            id_reda,
+            email
+
         };
     }
 
@@ -70,6 +72,9 @@ export default function Prikaz_narudzbe({ pb, data, role, ucitajNarudzbe }) {
                     </TableCell>
                     {role == 'ADMIN' ? (<TableCell component="th" scope="row">
                         {row.imePrezime}
+                    </TableCell>) : (<></>)}
+                    {role == 'ADMIN' ? (<TableCell component="th" scope="row">
+                        {row.email}
                     </TableCell>) : (<></>)}
                     <TableCell align="right">{
                         role == 'ADMIN' ?
@@ -130,7 +135,8 @@ export default function Prikaz_narudzbe({ pb, data, role, ucitajNarudzbe }) {
             ).isRequired,
             imePrezime: PropTypes.string.isRequired,
             boja: PropTypes.string.isRequired,
-            id_reda: PropTypes.string.isRequired
+            id_reda: PropTypes.string.isRequired,
+            email: PropTypes.string.isRequired
 
         }).isRequired,
     };
@@ -196,61 +202,73 @@ export default function Prikaz_narudzbe({ pb, data, role, ucitajNarudzbe }) {
             boja = 'white'
         }
         else if (red.order_status == "istekla") boja = 'red'
-        rows.push(createData(new Date(red.created).toLocaleString("en-GB"), red.order_status, red.ukupnaCjena, arraypom, index + 1, imePrezime, boja, red.id))
+        rows.push(createData(new Date(red.created).toLocaleString("en-GB"), red.order_status, red.ukupnaCjena, arraypom, index + 1, imePrezime, boja, red.id, red.expand['user_id'].email))
     }
     const [orderDirection, setOrderDirection] = useState('asc')
     const [orderByValue, setOrderByValue] = useState('Status')
 
-    function HandleSortRequest(property) {
-        if (orderByValue == property && orderDirection == 'asc')
+    function HandleSortRequest(field) {
+        let direction = 'asc'
+        if (orderByValue == field && orderDirection == 'asc') {
             setOrderDirection('desc')
+            direction = 'desc'
+        }
         else {
             setOrderDirection('asc')
-            setOrderByValue(property)
+            setOrderByValue(field)
         }
-        ucitajNarudzbe(orderByValue, orderDirection)
+        ucitajNarudzbe(field, direction)
 
     }
     return (
-        <TableContainer component={Paper}>
-            <SearchBar style={{ margin: '15px', border: 'solid 3px #D3D3D3' }} placeholder='Unesite pojam za pretragu'
-                onChange={newValue => ucitajNarudzbe(orderByValue, orderDirection, newValue)} ></SearchBar>
-            <Divider />
-            <Table aria-label="collapsible table">
-                <TableHead sx={{ backgroundColor: '#D3D3D3' }}>
-
-                    <TableRow>
-                        <TableCell />
-                        <TableCell>Redni broj</TableCell>
-                        {role == 'ADMIN' ? (<TableCell>
-                            <TableSortLabel active={orderByValue == 'name'} direction={orderByValue === 'name' ? orderDirection : 'asc'}
-                                onClick={() => { HandleSortRequest('name') }}
-
-                            > Ime i prezime</TableSortLabel></TableCell>) : (<></>)}
-                        <TableCell align="right">
-                            <TableSortLabel active={orderByValue == 'Status'} direction={orderByValue === 'Status' ? orderDirection : 'asc'}
-                                onClick={() => { HandleSortRequest('Status') }}> Status narudzbe
-                            </TableSortLabel>
-                        </TableCell>
-                        <TableCell align="right">
-                            <TableSortLabel active={orderByValue == 'cjena'} direction={orderByValue === 'cjena' ? orderDirection : 'asc'}
-                                onClick={() => { HandleSortRequest('cjena') }}> Ukupna cjena (KM)
-                            </TableSortLabel>
-                        </TableCell>
-                        <TableCell align="right">
-                            <TableSortLabel active={orderByValue == 'Vrjeme'} direction={orderByValue === 'Vrjeme' ? orderDirection : 'asc'}
-                                onClick={() => { HandleSortRequest('Vrjeme') }}> Vrjeme narudzbe
-                            </TableSortLabel>
-                        </TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map((row) => (
-                        < Row key={row.redniBroj} row={row} backColor={row.boja} id_reda={row.id_reda} />
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <Box>
+            <TableContainer component={Paper}>
+                <SearchBar style={{ margin: '15px', border: 'solid 3px #2979ff' }} placeholder='Unesite pojam za pretragu'
+                    onChange={newValue => ucitajNarudzbe(orderByValue, orderDirection, newValue)} onCancelResearch={() => ucitajNarudzbe(orderByValue, orderDirection, '')} ></SearchBar>
+                <Divider />
+                {rows.length > 0 ?
+                    (
+                        <Table aria-label="collapsible table">
+                            <TableHead sx={{ backgroundColor: '#2979ff' }}>
+                                <TableRow>
+                                    <TableCell />
+                                    <TableCell>Redni broj</TableCell>
+                                    {role == 'ADMIN' ? (<TableCell>
+                                        <TableSortLabel active={orderByValue == 'name'} direction={orderByValue === 'name' ? orderDirection : 'asc'}
+                                            onClick={() => { HandleSortRequest('name') }}> Ime i prezime
+                                        </TableSortLabel></TableCell>) : (<></>)}
+                                    {role == 'ADMIN' ? (<TableCell>
+                                        <TableSortLabel active={orderByValue == 'email'} direction={orderByValue === 'email' ? orderDirection : 'asc'}
+                                            onClick={() => { HandleSortRequest('email') }}> Email
+                                        </TableSortLabel></TableCell>) : (<></>)}
+                                    <TableCell align="right">
+                                        <TableSortLabel active={orderByValue == 'Status'} direction={orderByValue === 'Status' ? orderDirection : 'asc'}
+                                            onClick={() => { HandleSortRequest('Status') }}> Status narudzbe
+                                        </TableSortLabel>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <TableSortLabel active={orderByValue == 'cjena'} direction={orderByValue === 'cjena' ? orderDirection : 'asc'}
+                                            onClick={() => { HandleSortRequest('cjena') }}> Ukupna cjena (KM)
+                                        </TableSortLabel>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <TableSortLabel active={orderByValue == 'Vrjeme'} direction={orderByValue === 'Vrjeme' ? orderDirection : 'asc'}
+                                            onClick={() => { HandleSortRequest('Vrjeme') }}> Vrjeme narudzbe
+                                        </TableSortLabel>
+                                    </TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {rows.map((row) => (
+                                    < Row key={row.redniBroj} row={row} backColor={row.boja} id_reda={row.id_reda} />
+                                ))}
+                            </TableBody>
+                        </Table>
+                    ) : (<Typography sx={{
+                        display: "flex", justifyContent: "center", color: 'red', fontSize: '75px', height: '50vh', alignItems: 'center', textAlign: 'center'
+                    }}>Nema pronadjenih rezultata</Typography>)}
+            </TableContainer>
+        </Box>
     )
 
 }

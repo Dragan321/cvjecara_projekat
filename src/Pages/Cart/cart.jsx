@@ -114,7 +114,7 @@ export default function Cart({ ucitajBukete, cartItems, setCartItems, pb, setCar
                         )) : (<div></div>)}
                         {cartItemsBuketi.length > 0 ? (cartItemsBuketi.map((cartItem) =>
                             <Grid2 item md={3} xs={12} sm={6} key={cartItem.buket.id + 1}>
-                                <CardCartBuket sadrzaj={cartItem.sadrzajBuketa} setCartUkupnaCjena={setCartUkupnaCjena} cartUkupnaCjena={cartUkupnaCjena} setCartItemsCount={setCartItemsCount} cartItemsCount={cartItemsCount} kolicinaMax={cartItem.kolicinaMaxpom} setKolicinaMax={cartItem.setKolicinaMax} kolicinaCvjeta={cartItem.kolicina} buket={cartItem.buket} setCartItemsBuketi={setCartItemsBuketi} cartItemsBuketi={cartItemsBuketi} img={pb.getFileUrl(cartItem.buket, cartItem.buket.slika)} naziv={cartItem.buket.naziv} maxKolicina={cartItem.buket.kolicina} cijena={cartItem.buket.cijena} />
+                                <CardCartBuket sadrzaj={cartItem.sadrzajBuketa} setCartUkupnaCjena={setCartUkupnaCjena} cartUkupnaCjena={cartUkupnaCjena} setCartItemsCount={setCartItemsCount} cartItemsCount={cartItemsCount} kolicinaMax={cartItem.kolicinaMaxpom} setKolicinaMax={cartItem.setKolicinaMax} kolicinaCvjeta={cartItem.kolicina} buket={cartItem.buket} setCartItemsBuketi={setCartItemsBuketi} cartItemsBuketi={cartItemsBuketi} img={pb.getFileUrl(cartItem.buket, cartItem.buket.slika)} naziv={cartItem.buket.naziv} maxKolicina={cartItem.buket.kolicina} cijena={cartItem.buket.cijena} opis={cartItem.buket.opis} />
 
                             </Grid2>
                         )) : (<div></div>)}

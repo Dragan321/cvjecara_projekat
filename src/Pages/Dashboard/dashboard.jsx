@@ -7,8 +7,8 @@ import TabPanel from '@mui/lab/TabPanel';
 import TabList from '@mui/lab/TabList';
 import ZahtejviZaAdmina from "../../components/zahtjeviZaAdmina/zahtjeviZaAdmina";
 import { Container } from "@mui/material";
-
-
+import GridViewIcon from '@mui/icons-material/GridView';
+import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 
 export default function Dashboard({ pb, isLoggedIn }) {
     const [narudzbe, setNarudzbe] = useState([])
@@ -25,6 +25,13 @@ export default function Dashboard({ pb, isLoggedIn }) {
                         sortIzraz = '-created'
                     else
                         sortIzraz = '+created'
+
+                    break;
+                case 'email':
+                    if (order == 'desc')
+                        sortIzraz = '-email'
+                    else
+                        sortIzraz = '+email'
 
                     break;
                 case 'cjena':
@@ -85,8 +92,8 @@ export default function Dashboard({ pb, isLoggedIn }) {
             <TabContext value={value}>
                 <Box>
                     <TabList onChange={handleChange} centered>
-                        <Tab label="Pregled narudzbi" value="1" sx={{ fontSize: '30px' }} />
-                        <Tab label="Zahtjevi za admina" value="2" sx={{ fontSize: '30px' }} />
+                        <Tab label="Pregled narudzbi" icon={<GridViewIcon sx={{ fontSize: '40px' }} />} iconPosition="start" value="1" sx={{ fontSize: '25px' }} />
+                        <Tab label="Zahtjevi za admina" icon={<PersonAddAlt1Icon sx={{ fontSize: '40px' }} />} iconPosition="start" value="2" sx={{ fontSize: '25px' }} />
                     </TabList>
                 </Box>
                 <TabPanel value="1">

@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, Slider } from '@mui/material';
 import { Stack } from '@mui/system';
 
-export default function CardBuket({ img, naziv, sadrzaj, maxKolicina, cijena, cartItemsBuketi, setCartItemsBuketi, buket, setCartUkupnaCjena, cartUkupnaCjena, setCartItemsCount, cartItemsCount }) {
+export default function CardBuket({ img, naziv, sadrzaj, maxKolicina, cijena, cartItemsBuketi, setCartItemsBuketi, buket, setCartUkupnaCjena, cartUkupnaCjena, setCartItemsCount, cartItemsCount, opis }) {
     const [kolicina, setKolicina] = useState(1);
     const [kolicinaMax, setKolicinaMax] = useState(maxKolicina);
     const [cijenaUkupno, setCijenaUkupno] = useState(cijena);
@@ -84,6 +84,9 @@ export default function CardBuket({ img, naziv, sadrzaj, maxKolicina, cijena, ca
                     <Stack spacing={1}>
                         <Typography gutterBottom variant="h5" component="div">
                             {naziv}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            {opis}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                             {'Sadrzaj: ' + sadrzajBuketa}

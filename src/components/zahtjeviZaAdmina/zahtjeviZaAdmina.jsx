@@ -7,6 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import ZahtejviZaAdminaRed from "./zahtjeviZaAdminaRed";
+import { Box, Typography } from "@mui/material";
 
 export default function ZahtejviZaAdmina({ pb }) {
     const rowsPom = []
@@ -41,27 +42,32 @@ export default function ZahtejviZaAdmina({ pb }) {
 
     useEffect(() => {
         izlistajZahtjeve();
+        console.log(rows)
     }, []);
 
     return (
-        <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Ime</TableCell>
-                        <TableCell align="right">Prezime</TableCell>
-                        <TableCell align="right">Email</TableCell>
-                        <TableCell align="right">Prihvati zahtjev</TableCell>
-                        <TableCell align="right">Odbij zahtjev</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map((row) => (
-                        <ZahtejviZaAdminaRed row={row} pb={pb} izlistajZahtjeve={izlistajZahtjeve} />
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <Box>
+            {rows.length > 0 ?
+                (<TableContainer component={Paper}><Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <TableHead sx={{ background: '#2979ff' }}>
+                        <TableRow>
+                            <TableCell>Ime</TableCell>
+                            <TableCell align="right">Prezime</TableCell>
+                            <TableCell align="right">Email</TableCell>
+                            <TableCell align="right">Prihvati zahtjev</TableCell>
+                            <TableCell align="right">Odbij zahtjev</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {rows.map((row) => (
+                            <ZahtejviZaAdminaRed row={row} pb={pb} izlistajZahtjeve={izlistajZahtjeve} />
+                        ))}
+                    </TableBody>
+                </Table></TableContainer>) : (<Typography sx={{
+                    display: "flex", justifyContent: "center", color: 'red', fontSize: '100px', height: '25vh', alignItems: 'center', textAlign: 'center'
+                }}>Nema aktivnih zahtjeva</Typography>)
+            }
+        </Box>
     );
 
 

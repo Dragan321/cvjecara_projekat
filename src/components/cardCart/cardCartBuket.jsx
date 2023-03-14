@@ -7,7 +7,7 @@ import { Button, CardActionArea, CardActions, Input, Slider, Stack } from '@mui/
 import MuiInput from '@mui/material/Input';
 
 
-export default function CardCartBuket({ img, naziv, sadrzaj, maxKolicina, cijena, buket, cartItemsBuketi, setCartItemsBuketi, kolicinaCvjeta, setKolicinaMax, kolicinaMax, setCartItemsCount, cartItemsCount, setCartUkupnaCjena, cartUkupnaCjena }) {
+export default function CardCartBuket({ img, naziv, sadrzaj, cijena, buket, cartItemsBuketi, setCartItemsBuketi, kolicinaCvjeta, kolicinaMax, setCartItemsCount, cartItemsCount, setCartUkupnaCjena, cartUkupnaCjena, opis }) {
     function removeFromCart() {
         buket.kolicina = kolicinaMax + kolicinaCvjeta
         setCartItemsBuketi(cartItemsBuketi.filter((cartItem) => cartItem.buket != buket))
@@ -30,6 +30,9 @@ export default function CardCartBuket({ img, naziv, sadrzaj, maxKolicina, cijena
                     <Stack spacing={1}>
                         <Typography gutterBottom variant="h5" component="div">
                             {naziv}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            {opis}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                             {'Sadrzaj: ' + sadrzaj}

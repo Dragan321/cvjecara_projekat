@@ -2,14 +2,14 @@ import './App.css';
 import { Container, Box, Button } from '@mui/material';
 import Header from './components/Header/header';
 import PocketBase from 'pocketbase';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import LoginPopUp from './components/LoginPopUp/loginPopUp';
 import RegisterPoUp from './components/Register/Register';
 import Home from './Pages/Home/home';
 import Cart from './Pages/Cart/cart';
 import { Redirect, Route, Routes } from 'react-router-dom';
 import Dashboard from './Pages/Dashboard/dashboard';
-
+import { Snackbar } from '@mui/material';
 
 
 const pb = new PocketBase('http://127.0.0.1:8090');
@@ -118,6 +118,9 @@ function App() {
     }
 
   }
+
+
+
 
   return (
     <Box>

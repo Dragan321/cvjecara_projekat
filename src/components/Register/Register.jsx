@@ -16,14 +16,11 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { getRoles } from '@testing-library/react';
 import { useForm } from 'react-hook-form';
-import { Record } from 'pocketbase';
 
 export default function RegisterPoUp(props) {
     const [value, setValue] = React.useState(dayjs('2014-08-18T21:11:54'));
     const [uniqueEmail, setUniqueEmail] = useState(true);
-
 
     const handleChange = (newValue) => {
         setValue(newValue);
@@ -193,7 +190,7 @@ export default function RegisterPoUp(props) {
                 </DialogContent>
                 <DialogActions>
                     <Button type='reset' onClick={() => { props.setopenRegisterPopUp(false) }} >Cancel</Button>
-                    <Button variant='contained' type='submit' >Register</Button>
+                    <Button variant='contained' type='submit' disabled={!uniqueEmail}>Register</Button>
                 </DialogActions>
             </form>
 
@@ -202,3 +199,8 @@ export default function RegisterPoUp(props) {
 
 
 }
+
+
+
+
+
