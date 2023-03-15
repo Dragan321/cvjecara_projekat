@@ -1,3 +1,5 @@
+Da bi ste pokrenuli projekat potreno je da pokrenete pocketbase server komandom .\pocketbase\pocketbase.exe serve, a zatim aplikaciju komandom npm start.
+Testni profil za aplikaciju ADMIN@admin1.com sifra testtest
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
