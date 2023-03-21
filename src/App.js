@@ -129,9 +129,11 @@ function App() {
       <RegisterPoUp pb={pb} setopenRegisterPopUp={setopenRegisterPopUp} openRegisterPopUp={openRegisterPopUp}></RegisterPoUp>
 
       <Routes>
-        <Route path='/' element={<Home buketi={buketi} cvjetovi={cvjetovi} setCvjetovi={setCvjetovi} pb={pb} setCartItems={setCartItems} cartItems={cartItems} cartItemsBuketi={cartItemsBuketi} setCartItemsBuketi={setCartItemsBuketi} setCartItemsCount={setCartItemsCount} setCartUkupnaCjena={setCartUkupnaCjena} cartUkupnaCjena={cartUkupnaCjena} cartItemsCount={cartItemsCount} ></Home>}></Route>
+        <Route path='/' element={<Home ucitajBukete={ucitajBukete} ucitajCvjetove={ucitajCvjetove} buketi={buketi} cvjetovi={cvjetovi} setCvjetovi={setCvjetovi} pb={pb} setCartItems={setCartItems} cartItems={cartItems} cartItemsBuketi={cartItemsBuketi} setCartItemsBuketi={setCartItemsBuketi} setCartItemsCount={setCartItemsCount} setCartUkupnaCjena={setCartUkupnaCjena} cartUkupnaCjena={cartUkupnaCjena} cartItemsCount={cartItemsCount} ></Home>}></Route>
         <Route path='/cart' element={<Cart ucitajBukete={ucitajBukete} cartItemsBuketi={cartItemsBuketi} setCartItemsBuketi={setCartItemsBuketi} ucitajCvjetove={ucitajCvjetove} isLoggedIn={isLoggedIn} setCartClear={setCartClear} cartClear={cartClear} pb={pb} setCartUkupnaCjena={setCartUkupnaCjena} cartUkupnaCjena={cartUkupnaCjena} cartItems={cartItems} setCartItemsCount={setCartItemsCount} cartItemsCount={cartItemsCount} setCartItems={setCartItems}></Cart>}></Route>
         <Route path='/dashboard' element={<Dashboard pb={pb} isLoggedIn={isLoggedIn} />} />
+        <Route path='/*' element={<Home ucitajBukete={ucitajBukete} ucitajCvjetove={ucitajCvjetove} buketi={buketi} cvjetovi={cvjetovi} setCvjetovi={setCvjetovi} pb={pb} setCartItems={setCartItems} cartItems={cartItems} cartItemsBuketi={cartItemsBuketi} setCartItemsBuketi={setCartItemsBuketi} setCartItemsCount={setCartItemsCount} setCartUkupnaCjena={setCartUkupnaCjena} cartUkupnaCjena={cartUkupnaCjena} cartItemsCount={cartItemsCount} ></Home>}></Route>
+
       </Routes>
 
     </Box>

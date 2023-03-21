@@ -63,10 +63,10 @@ export default function Dashboard({ pb, isLoggedIn }) {
                 expand: 'user_id,sadrzajNarudzbe_id.cvijet_id, sadrzajNarudzbe_id.buket_id.sadrzajBuketa_id.id_cvijeta',
                 '$autoCancel': false
             }) :
-                await pb.collection('narudzbe').getList(1, 50, {
+                await pb.collection('narudzbe').getList(1, 50, 200, {
                     sort: sortIzraz,
                     filter: `user_id="${pb.authStore.model.id}" &&(order_status~"${searchTerm}" || created~"${searchTerm}" || sadrzajNarudzbe_id.cvijet_id.naziv?~"${searchTerm}" || sadrzajNarudzbe_id.buket_id.naziv?~"${searchTerm}" || sadrzajNarudzbe_id.buket_id.sadrzajBuketa_id.id_cvijeta.naziv?~"${searchTerm}")`,
-                    expand: 'sadrzajNarudzbe_id, sadrzajNarudzbe_id.cvijet_id, sadrzajNarudzbe_id.buket_id,sadrzajNarudzbe_id.buket_id.id_cvijeta',
+                    expand: 'sadrzajNarudzbe_id.cvijet_id, sadrzajNarudzbe_id.buket_id.sadrzajBuketa_id.id_cvijeta',
                     '$autoCancel': false
                 });
 
@@ -93,7 +93,9 @@ export default function Dashboard({ pb, isLoggedIn }) {
                 <Box>
                     <TabList onChange={handleChange} centered>
                         <Tab label="Pregled narudzbi" icon={<GridViewIcon sx={{ fontSize: '40px' }} />} iconPosition="start" value="1" sx={{ fontSize: '25px' }} />
-                        <Tab label="Zahtjevi za admina" icon={<PersonAddAlt1Icon sx={{ fontSize: '40px' }} />} iconPosition="start" value="2" sx={{ fontSize: '25px' }} />
+                        {pb.authStore.model.role == "ADMIN" ? (
+                            <Tab label="Zahtjevi za admina" icon={<PersonAddAlt1Icon sx={{ fontSize: '40px' }} />} iconPosition="start" value="2" sx={{ fontSize: '25px' }} />) : (<></>)
+                        }
                     </TabList>
                 </Box>
                 <TabPanel value="1">

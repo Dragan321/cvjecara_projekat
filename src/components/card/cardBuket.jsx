@@ -5,6 +5,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, Slider } from '@mui/material';
 import { Stack } from '@mui/system';
+import ReactShowMoreText from 'react-show-more-text';
 
 export default function CardBuket({ img, naziv, sadrzaj, maxKolicina, cijena, cartItemsBuketi, setCartItemsBuketi, buket, setCartUkupnaCjena, cartUkupnaCjena, setCartItemsCount, cartItemsCount, opis }) {
     const [kolicina, setKolicina] = useState(1);
@@ -15,11 +16,12 @@ export default function CardBuket({ img, naziv, sadrzaj, maxKolicina, cijena, ca
         if (typeof newValue === 'number') {
             if (kolicinaMax == 0) {
                 setKolicina(0);
-                setCijenaUkupno(cijena);
+
+                setCijenaUkupno(Math.round(cijena * 100) / 100);
             }
             else {
                 setKolicina(newValue);
-                setCijenaUkupno(newValue * cijena);
+                setCijenaUkupno(Math.round(newValue * cijena * 100) / 100);
             }
         }
     }
@@ -73,22 +75,24 @@ export default function CardBuket({ img, naziv, sadrzaj, maxKolicina, cijena, ca
 
 
     return (
-        <Card sx={{ height: '100%', maxWidth: 345, marginTop: '15px' }}>
-            <CardActionArea>
+        <Card sx={{ marginTop: '15px' }}>
+            <CardActionArea sx={{ height: '100%' }}>
                 <CardMedia
                     component="img"
                     height="200"
                     image={img}
                 />
-                <CardContent>
+                <CardContent sx={{ height: '100%', marginTop: '15px' }}>
                     <Stack spacing={1}>
                         <Typography gutterBottom variant="h5" component="div">
                             {naziv}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            {opis}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <ReactShowMoreText lines={1} more={"More"} less={"less"}>
+                            <Typography variant="body2" color="text.secondary" >
+                                {opis}
+                            </Typography>
+                        </ReactShowMoreText>
+                        <Typography variant="body2" color="text.secondary" sx={{ lineHeight: '2.5ex', height: '7.5ex' }}>
                             {'Sadrzaj: ' + sadrzajBuketa}
                         </Typography>
                         {!disableButton ? (<Typography id="non-linear-slider" gutterBottom>

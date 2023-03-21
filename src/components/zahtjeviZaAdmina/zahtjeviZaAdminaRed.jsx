@@ -19,7 +19,6 @@ export default function ZahtejviZaAdminaRed({ row, pb, izlistajZahtjeve }) {
             }
 
             const record = await pb.collection('users').update(row.id, data)
-            console.log(record)
             izlistajZahtjeve()
         } catch (error) {
             console.log(error)

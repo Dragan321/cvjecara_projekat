@@ -41,7 +41,9 @@ export default function CardDodajCvijet({ pb, ucitajCvjetove }) {
             formData.append("kolicina", data.kolicina,);
             formData.append("cijena", data.cijena);
             formData.append("opis", data.opis);
-            formData.append("slika", filesToUpload);
+            if (typeof filesToUpload !== 'undefined') {
+                formData.append("slika", filesToUpload);
+            }
 
 
             const record = await pb.collection('cvjet').create(formData);
@@ -70,7 +72,7 @@ export default function CardDodajCvijet({ pb, ucitajCvjetove }) {
             {
                 pb.authStore.model.role == 'ADMIN' ? (
 
-                    <Card sx={{ height: '100%', maxWidth: 345, marginTop: '15px' }}>
+                    <Card sx={{ marginTop: '15px' }}>
                         <CardActionArea sx={{ height: '100%' }} onClick={handleClickOpen}>
 
                             <AddIcon sx={{ fontSize: 155, margin: 'auto', display: 'flex' }} />
@@ -82,7 +84,7 @@ export default function CardDodajCvijet({ pb, ucitajCvjetove }) {
                             </CardContent>
                         </CardActionArea>
                     </Card>
-                ) : (<Box></Box>)
+                ) : (null)
 
             }
 

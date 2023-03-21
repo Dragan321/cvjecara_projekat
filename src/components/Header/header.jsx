@@ -53,21 +53,21 @@ export default function Header(props) {
                                 {props.isLoggedIn ? (
                                     <Menu {...bindMenu(popupState)}>
                                         <Link to='/dashboard' style={{ textDecoration: 'none' }} >
-                                            <MenuItem onClick={popupState.close} id='profile' ><DashboardIcon />
+                                            <MenuItem onClick={popupState.close} id='profile' ><DashboardIcon sx={{ marginRight: '5px' }} />
                                                 <Typography sx={{ color: 'black' }}> Prikaz narudzbi</Typography>
                                             </MenuItem>
                                         </Link>
                                         <Link to='/' style={{ textDecoration: 'none' }} >
-                                            <MenuItem onClick={() => { popupState.close(); props.logout(); }} id='logout'><LogoutIcon /> <Typography sx={{ color: 'black' }}>Logout</Typography></MenuItem>
+                                            <MenuItem onClick={() => { popupState.close(); props.logout(); }} id='logout'><LogoutIcon sx={{ marginRight: '5px' }} /> <Typography sx={{ color: 'black' }}>Logout</Typography></MenuItem>
                                         </Link>
                                     </Menu>
                                 ) : (
                                     <Menu {...bindMenu(popupState)}>
                                         <Link to='/' style={{ textDecoration: 'none' }} >
-                                            <MenuItem onClick={() => { props.setopenRegisterPopUp(true); popupState.close(); }} id='Register'><PersonAddAlt1Icon /><Typography sx={{ color: 'black' }}>Register</Typography></MenuItem>
+                                            <MenuItem onClick={() => { props.setopenRegisterPopUp(true); popupState.close(); }} id='Register'><PersonAddAlt1Icon sx={{ marginRight: '5px' }} /><Typography sx={{ color: 'black' }}>Register</Typography></MenuItem>
                                         </Link>
                                         <Link to='/' style={{ textDecoration: 'none' }} >
-                                            <MenuItem onClick={() => { props.setopenLoginPopUp(true); popupState.close() }} id='Login' ><LoginIcon /><Typography sx={{ color: 'black' }} >Login</Typography></MenuItem>
+                                            <MenuItem onClick={() => { props.setopenLoginPopUp(true); popupState.close() }} id='Login' ><LoginIcon sx={{ marginRight: '5px' }} /><Typography sx={{ color: 'black' }} >Login</Typography></MenuItem>
                                         </Link>
 
                                     </Menu>

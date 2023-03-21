@@ -12,13 +12,11 @@ import DodajCvjet from "../dodajCvjetUBuketCard/dodajCvjetUBuketCard";
 import FileUpload from "react-mui-fileuploader";
 
 
-export default function PopUpDodajBuket({ pb, cvijece }) {
+export default function PopUpDodajBuket({ cvjetovi, pb, cvijece, ucitajBukete, ucitajCvjetove }) {
     const { register, handleSubmit, errors, reset } = useForm();
-
     const [open, setOpen] = useState(false);
-    const cvjetovi = [];
     const [filesToUpload, setFilesToUpload] = useState()
-
+    const [maxKolicinaBuketa, setMaxKolicinaBuketa] = useState(0)
 
     const handleFilesChange = (files) => {
 
@@ -57,7 +55,10 @@ export default function PopUpDodajBuket({ pb, cvijece }) {
                 formData.append("kolicina", data.kolicina,);
                 formData.append("cijena", data.cijena);
                 formData.append("opis", data.opis);
-                formData.append("slika", filesToUpload);
+                if (typeof filesToUpload !== 'undefined') {
+                    formData.append("slika", filesToUpload);
+                }
+
                 for (const cvjet of nizCvjetova) {
                     formData.append("sadrzajBuketa_id", cvjet)
                 }
@@ -66,15 +67,16 @@ export default function PopUpDodajBuket({ pb, cvijece }) {
 
                 cvjetovi.splice(0, cvjetovi.length)
                 nizCvjetova.splice(0, nizCvjetova.length);
-                reset();
-                handleClose();
+                ucitajBukete()
+                ucitajCvjetove()
+                reset()
+                handleClose()
             } else window.alert('Morate izabrati bar jedan cvjet')
         }
         catch (err) {
             window.alert('Greska pri dodavanju');
             console.log(err)
         }
-
 
     }
 
@@ -83,8 +85,8 @@ export default function PopUpDodajBuket({ pb, cvijece }) {
             {
                 pb.authStore.model.role == 'ADMIN' ? (
 
-                    <Card sx={{ maxWidth: 345, marginTop: '15px' }}>
-                        <CardActionArea sx={{ height: '100%' }} onClick={handleClickOpen}>
+                    <Card sx={{ marginTop: '15px' }}>
+                        <CardActionArea onClick={handleClickOpen}>
 
                             <AddIcon sx={{ fontSize: 155, margin: 'auto', display: 'flex' }} />
                             <CardContent>
@@ -95,7 +97,7 @@ export default function PopUpDodajBuket({ pb, cvijece }) {
                             </CardContent>
                         </CardActionArea>
                     </Card>
-                ) : (<Box></Box>)
+                ) : (null)
 
             }
 
@@ -122,10 +124,14 @@ export default function PopUpDodajBuket({ pb, cvijece }) {
                             label="Kolicina"
                             type="number"
                             fullWidth
-                            inputProps={{ min: 0 }}
-                            min={0}
+                            InputProps={{
+                                inputProps: {
+                                    max: maxKolicinaBuketa, min: 0
+                                }
+                            }}
                             required
                             variant="standard"
+                            helperText={"Max kolicina:" + maxKolicinaBuketa}
                             {...register("kolicina")}
                         />
                         <TextField
@@ -159,10 +165,11 @@ export default function PopUpDodajBuket({ pb, cvijece }) {
 
                             {cvijece.length > 0 ? (cvijece.map((cvijet) =>
                                 <Grid2 item md={6} xs={12} sm={6} key={cvijet.id}>
-                                    <DodajCvjet id={cvijet.id} cvjetovi={cvjetovi} img={pb.getFileUrl(cvijet, cvijet.slika)} naziv={cvijet.naziv} opis={cvijet.opis} maxKolicina={cvijet.kolicina} cijena={cvijet.cijena}></DodajCvjet>
-
+                                    {cvijet.kolicina > 0 ?
+                                        (<DodajCvjet maxKolicinaBuketa={maxKolicinaBuketa} setMaxKolicinaBuketa={setMaxKolicinaBuketa} id={cvijet.id} cvjetovi={cvjetovi} img={pb.getFileUrl(cvijet, cvijet.slika)} naziv={cvijet.naziv} opis={cvijet.opis} maxKolicina={cvijet.kolicina} cijena={cvijet.cijena}></DodajCvjet>) : (null)
+                                    }
                                 </Grid2>
-                            )) : (<div></div>)}
+                            )) : (<Typography sx={{ fontSize: '25px', color: 'red' }}>Nema dostupnih cvjetova</Typography>)}
                         </Grid2>
                     </DialogContent>
                     <DialogActions>

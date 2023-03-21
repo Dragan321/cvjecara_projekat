@@ -19,7 +19,7 @@ export default function CardCartBuket({ img, naziv, sadrzaj, cijena, buket, cart
 
 
     return (
-        <Card sx={{ maxWidth: 345, marginTop: '15px' }}>
+        <Card sx={{ marginTop: '15px' }}>
             <CardActionArea >
                 <CardMedia
                     component="img"
@@ -31,9 +31,7 @@ export default function CardCartBuket({ img, naziv, sadrzaj, cijena, buket, cart
                         <Typography gutterBottom variant="h5" component="div">
                             {naziv}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            {opis}
-                        </Typography>
+
                         <Typography variant="body2" color="text.secondary">
                             {'Sadrzaj: ' + sadrzaj}
                         </Typography>

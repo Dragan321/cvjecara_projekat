@@ -78,10 +78,10 @@ export default function Prikaz_narudzbe({ pb, data, role, ucitajNarudzbe }) {
                     </TableCell>) : (<></>)}
                     <TableCell align="right">{
                         role == 'ADMIN' ?
-                            (back == 'white' ? <Typography>cekanje na preuzimanje<Button onClick={potvrdiNarudzbu}>Potvrdi narudzbu</Button></Typography> : row.status) :
+                            (back == 'white' ? <Typography>cekanje na preuzimanje<Button variant='contained' onClick={potvrdiNarudzbu}>Potvrdi narudzbu</Button></Typography> : row.status) :
                             row.status
                     }</TableCell>
-                    <TableCell align="right">{row.ukupno}</TableCell>
+                    <TableCell align="right">{Math.round(row.ukupno * 100) / 100}</TableCell>
                     <TableCell align="right">{row.vrjemeNarudzbe}</TableCell>
 
                 </TableRow>
@@ -105,7 +105,7 @@ export default function Prikaz_narudzbe({ pb, data, role, ucitajNarudzbe }) {
                                             <TableRow key={sadrzajReda.cvijet + sadrzajReda.kolicina + sadrzajReda.cijena}>
                                                 <TableCell component="th" scope="row">{sadrzajReda.cvijet}</TableCell>
                                                 <TableCell >{sadrzajReda.kolicina}</TableCell>
-                                                <TableCell align="right">{sadrzajReda.cjena}</TableCell>
+                                                <TableCell align="right">{Math.round(sadrzajReda.cjena * 100) / 100}</TableCell>
 
                                             </TableRow>))}
                                     </TableBody>
@@ -155,12 +155,12 @@ export default function Prikaz_narudzbe({ pb, data, role, ucitajNarudzbe }) {
     data.forEach(kreirajRed)
 
     function kreirajRed(red, index) {
-        var arraypom = []
+        var sadrzajNarudzbe = []
         red.expand.sadrzajNarudzbe_id.forEach(izlistajSadrzajNarudzbe)
-
+        console.log(red)
         function izlistajSadrzajNarudzbe(red) {
             if (red.cvijet_id != '') {
-                arraypom.push(
+                sadrzajNarudzbe.push(
                     {
                         cvijet: red.expand.cvijet_id.naziv,
                         kolicina: red.kolicina_cvjeta,
@@ -171,7 +171,7 @@ export default function Prikaz_narudzbe({ pb, data, role, ucitajNarudzbe }) {
             else if (red.buket_id != '') {
                 var sadrzajBuketa = ''
 
-
+                console.log(red)
                 red.expand['buket_id'].expand['sadrzajBuketa_id'].forEach(myFunction)
 
                 function myFunction(item, index, arr) {
@@ -179,7 +179,7 @@ export default function Prikaz_narudzbe({ pb, data, role, ucitajNarudzbe }) {
                     if (arr.length > index + 1)
                         sadrzajBuketa += ', '
                 }
-                arraypom.push(
+                sadrzajNarudzbe.push(
                     {
                         cvijet: red.expand.buket_id.naziv + ' ( ' + sadrzajBuketa + ' )',
                         kolicina: red.kolicina_cvjeta,
@@ -202,7 +202,7 @@ export default function Prikaz_narudzbe({ pb, data, role, ucitajNarudzbe }) {
             boja = 'white'
         }
         else if (red.order_status == "istekla") boja = 'red'
-        rows.push(createData(new Date(red.created).toLocaleString("en-GB"), red.order_status, red.ukupnaCjena, arraypom, index + 1, imePrezime, boja, red.id, red.expand['user_id'].email))
+        rows.push(createData(new Date(red.created).toLocaleString("en-GB"), red.order_status, red.ukupnaCjena, sadrzajNarudzbe, index + 1, imePrezime, boja, red.id, typeof red.expand['user_id'] !== 'undefined' ? red.expand['user_id'].email : ""))
     }
     const [orderDirection, setOrderDirection] = useState('asc')
     const [orderByValue, setOrderByValue] = useState('Status')
@@ -260,7 +260,7 @@ export default function Prikaz_narudzbe({ pb, data, role, ucitajNarudzbe }) {
                             </TableHead>
                             <TableBody>
                                 {rows.map((row) => (
-                                    < Row key={row.redniBroj} row={row} backColor={row.boja} id_reda={row.id_reda} />
+                                    <Row key={row.redniBroj} row={row} backColor={row.boja} id_reda={row.id_reda} />
                                 ))}
                             </TableBody>
                         </Table>

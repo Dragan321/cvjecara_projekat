@@ -14,7 +14,7 @@ export default function ZahtejviZaAdmina({ pb }) {
     const [rows, setRows] = useState([]);
     async function izlistajZahtjeve() {
         try {
-            const records = await pb.collection('users').getFullList(200, {
+            const records = await pb.collection('users').getList(1, 50, {
                 sort: '-created',
                 filter: 'role="ADMIN" && verified_admin=false',
                 '$autoCancel': false
@@ -42,7 +42,6 @@ export default function ZahtejviZaAdmina({ pb }) {
 
     useEffect(() => {
         izlistajZahtjeve();
-        console.log(rows)
     }, []);
 
     return (

@@ -18,7 +18,7 @@ export default function CardCart({ img, naziv, opis, maxKolicina, cijena, cvijet
 
 
     return (
-        <Card sx={{ maxWidth: 345, marginTop: '15px' }}>
+        <Card sx={{ marginTop: '15px' }}>
             <CardActionArea >
                 <CardMedia
                     component="img"
@@ -30,9 +30,7 @@ export default function CardCart({ img, naziv, opis, maxKolicina, cijena, cvijet
                         <Typography gutterBottom variant="h5" component="div">
                             {naziv}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            {opis}
-                        </Typography>
+
                         <Typography id="non-linear-slider" gutterBottom>
                             Kolicina: {kolicinaCvjeta}
                         </Typography>

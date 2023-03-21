@@ -51,8 +51,6 @@ export default function RegisterPoUp(props) {
             const record1 = await props.pb.collection('users').getList(1, 50, {
                 filter: 'role = "ADMIN"'
             });
-            console.log(record1)
-            console.log(record)
             if (record1.totalItems == 0) {
                 const data = {
                     "verified_admin": true
@@ -80,7 +78,6 @@ export default function RegisterPoUp(props) {
             const resultList = await props.pb.collection('users').getList(1, 50, {
                 filter: `email="${event.target.value}"`,
             });
-            console.log(resultList)
             if (resultList.totalItems > 0) {
                 setUniqueEmail(false)
             }
@@ -150,6 +147,8 @@ export default function RegisterPoUp(props) {
                         label="Sifra"
                         type="password"
                         fullWidth
+                        inputProps={{ minLength: 8 }}
+                        minLength={8}
                         variant="standard"
                     />
                     <Stack spacing={4} sx={{ marginTop: 'auto' }}>

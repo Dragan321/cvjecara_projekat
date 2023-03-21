@@ -72,14 +72,13 @@ export default function Cart({ ucitajBukete, cartItems, setCartItems, pb, setCar
 
         <Container>
             {isLoggedIn ? (cartItemsCount > 0 ? (
-
                 <Box>
                     <Stack sx={{
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center'
                     }} direction="row" spacing={2} width={'100%'} position={'sticky'} marginTop={'15px'}>
-                        <Typography textAlign={'center'} fontWeight={'bold'} fontSize={'larger'}>Ukupna cjena: {cartUkupnaCjena + ' KM'}</Typography>
+                        <Typography textAlign={'center'} fontWeight={'bold'} fontSize={'larger'}>Ukupna cjena: {Math.round(cartUkupnaCjena * 100) / 100 + ' KM'}</Typography>
                         <Button margin={'auto'} size="large" color="primary" variant='outlined' onClick={() => {
                             for (let i = 0; i <= cartItems.length; i++) {
                                 setCartItems([]);

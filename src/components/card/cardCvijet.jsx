@@ -4,6 +4,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, Slider, Stack } from '@mui/material';
+import ReactShowMoreText from 'react-show-more-text';
 
 export default function CardCvijet({ img, naziv, opis, maxKolicina, cijena, cvijet, setCartItems, cartItems, setCartItemsCount, cartItemsCount, setCartUkupnaCjena, cartUkupnaCjena }) {
     const [kolicina, setKolicina] = useState(1);
@@ -14,11 +15,11 @@ export default function CardCvijet({ img, naziv, opis, maxKolicina, cijena, cvij
         if (typeof newValue === 'number') {
             if (kolicinaMax == 0) {
                 setKolicina(0);
-                setCijenaUkupno(cijena);
+                setCijenaUkupno(Math.round(cijena * 100) / 100);
             }
             else {
                 setKolicina(newValue);
-                setCijenaUkupno(newValue * cijena);
+                setCijenaUkupno(Math.round(newValue * cijena * 100) / 100);
             }
         }
     }
@@ -69,21 +70,23 @@ export default function CardCvijet({ img, naziv, opis, maxKolicina, cijena, cvij
     }
 
     return (
-        <Card sx={{ maxWidth: 345, marginTop: '15px' }}>
-            <CardActionArea>
+        <Card sx={{ marginTop: '15px' }}>
+            <CardActionArea sx={{ height: '100%' }}>
                 <CardMedia
                     component="img"
                     height="200"
                     image={img}
                 />
-                <CardContent>
-                    <Stack spacing={1}>
+                <CardContent sx={{ height: '100%', marginTop: '15px' }}>
+                    <Stack spacing={1} sx={{ height: '100%' }}>
                         <Typography gutterBottom variant="h5" component="div">
                             {naziv}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            {opis}
-                        </Typography>
+                        <ReactShowMoreText lines={1} more={"More"} less={"less"}>
+                            <Typography variant="body2" color="text.secondary">
+                                {opis}
+                            </Typography>
+                        </ReactShowMoreText>
                         {!disableButton ? (<Typography id="non-linear-slider" gutterBottom>
                             Kolicina:{kolicina}
                         </Typography>) : (<Typography id="non-linear-slider" gutterBottom color={'red'}>Nema na stanju</Typography>)}
