@@ -63,13 +63,6 @@ export default function Home(props) {
     else return false
   }
 
-  props.pb.collection('buket').subscribe('*', function (e) {
-    window.location.reload(true)
-  });
-
-  props.pb.collection('cvjet').subscribe('*', function (e) {
-    window.location.reload(false)
-  });
 
 
   return (

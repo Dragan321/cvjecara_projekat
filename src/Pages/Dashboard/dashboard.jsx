@@ -52,24 +52,24 @@ export default function Dashboard({ pb, isLoggedIn }) {
                     else
                         sortIzraz = '+user_id.name,+user_id.last_name'
                     break;
-                    break;
                 default:
                     sortIzraz = ''
+                    break;
+
             }
 
             const resultList = pb.authStore.model.role == 'ADMIN' ? await pb.collection('narudzbe').getList(1, 50, {
                 sort: sortIzraz,
-                filter: `user_id.name~"${searchTerm}" || user_id.last_name~"${searchTerm}" || order_status~"${searchTerm}" || created~"${searchTerm}" || sadrzajNarudzbe_id.cvijet_id.naziv?~"${searchTerm}" || sadrzajNarudzbe_id.buket_id.naziv?~"${searchTerm}" || sadrzajNarudzbe_id.buket_id.sadrzajBuketa_id.id_cvijeta.naziv?~"${searchTerm}"  `,
+                filter: `user_id.name~"${searchTerm}" || user_id.last_name~"${searchTerm}" || user_id.email~"${searchTerm}" || order_status~"${searchTerm}" || created~"${searchTerm}" || sadrzajNarudzbe_id.cvijet_id.naziv?~"${searchTerm}" || sadrzajNarudzbe_id.buket_id.naziv?~"${searchTerm}" || sadrzajNarudzbe_id.buket_id.sadrzajBuketa_id.id_cvijeta.naziv?~"${searchTerm}"  `,
                 expand: 'user_id,sadrzajNarudzbe_id.cvijet_id, sadrzajNarudzbe_id.buket_id.sadrzajBuketa_id.id_cvijeta',
                 '$autoCancel': false
             }) :
-                await pb.collection('narudzbe').getList(1, 50, 200, {
+                await pb.collection('narudzbe').getList(1, 50, {
                     sort: sortIzraz,
-                    filter: `user_id="${pb.authStore.model.id}" &&(order_status~"${searchTerm}" || created~"${searchTerm}" || sadrzajNarudzbe_id.cvijet_id.naziv?~"${searchTerm}" || sadrzajNarudzbe_id.buket_id.naziv?~"${searchTerm}" || sadrzajNarudzbe_id.buket_id.sadrzajBuketa_id.id_cvijeta.naziv?~"${searchTerm}")`,
+                    filter: `user_id="${pb.authStore.model.id}" && ( order_status~"${searchTerm}" || created~"${searchTerm}" || sadrzajNarudzbe_id.cvijet_id.naziv?~"${searchTerm}" || sadrzajNarudzbe_id.buket_id.naziv?~"${searchTerm}" || sadrzajNarudzbe_id.buket_id.sadrzajBuketa_id.id_cvijeta.naziv?~"${searchTerm}" )`,
                     expand: 'sadrzajNarudzbe_id.cvijet_id, sadrzajNarudzbe_id.buket_id.sadrzajBuketa_id.id_cvijeta',
                     '$autoCancel': false
                 });
-
             setNarudzbe(resultList.items)
         } catch (error) {
             console.log(error)

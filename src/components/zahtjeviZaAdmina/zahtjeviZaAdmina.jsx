@@ -19,8 +19,9 @@ export default function ZahtejviZaAdmina({ pb }) {
                 filter: 'role="ADMIN" && verified_admin=false',
                 '$autoCancel': false
             });
+            console.log(records)
             rowsPom.splice(0, rows.length)
-            records.forEach(myFunction)
+            records.items.forEach(myFunction)
 
             function myFunction(item) {
                 rowsPom.push(createData(item.name, item.last_name, item.email, item.id))

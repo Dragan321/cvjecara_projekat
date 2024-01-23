@@ -156,8 +156,10 @@ export default function Prikaz_narudzbe({ pb, data, role, ucitajNarudzbe }) {
 
     function kreirajRed(red, index) {
         var sadrzajNarudzbe = []
-        red.expand.sadrzajNarudzbe_id.forEach(izlistajSadrzajNarudzbe)
         console.log(red)
+
+        red.expand.sadrzajNarudzbe_id.forEach(izlistajSadrzajNarudzbe)
+        console.log(red.expand.sadrzajNarudzbe_id)
         function izlistajSadrzajNarudzbe(red) {
             if (red.cvijet_id != '') {
                 sadrzajNarudzbe.push(
@@ -171,7 +173,6 @@ export default function Prikaz_narudzbe({ pb, data, role, ucitajNarudzbe }) {
             else if (red.buket_id != '') {
                 var sadrzajBuketa = ''
 
-                console.log(red)
                 red.expand['buket_id'].expand['sadrzajBuketa_id'].forEach(myFunction)
 
                 function myFunction(item, index, arr) {

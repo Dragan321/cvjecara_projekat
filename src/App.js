@@ -12,7 +12,7 @@ import Dashboard from './Pages/Dashboard/dashboard';
 import { Snackbar } from '@mui/material';
 
 
-const pb = new PocketBase('http://127.0.0.1:8090');
+const pb = new PocketBase('https://cvjecara-api.azurewebsites.net');
 
 
 function App() {
