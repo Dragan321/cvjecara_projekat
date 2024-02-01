@@ -1,4 +1,4 @@
-### Demo aplikacije: <https://cvjecara.azurewebsites.net>
+### Demo aplikacije: <https://cvjecardemo.azurewebsites.net>
 
 ### Testni profili
 Testni profil za aplikaciju ADMIN@admin1.com sifra testtest
